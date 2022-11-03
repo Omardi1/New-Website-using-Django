@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+ 
+<div class="row">
+   <div class="col-md-12">
+      <form class="card card-sm">
+         <div class="card-body row no-gutters align-items-center">
+            <div class="col">
+                <input type="search" placeholder="saisissez le nom du produit que vous cherchez" name="item-nam" class="form-control form-contdrol-borderless"> 
+            </div>
+            <div class="col-auto" >
+               <button type="submit" class="btn btn-success">Recherche</button>
+            </div>       
+         </div>
+      </form>
+   </div>
+</div>
+<section>
+   <h1 class="text-center pb-2">Choisir CasaAgro c'est choisir la qualité</h1>
+ 
+ </section>
+<div class="row">
+{% for Product in products %}
+<div class="col-md-3">
+   <div class="card">
+   <h2>{{ Produt.name }}</h2>
+   <img src="{{ Product.image.url }}" alt="{{ Product.name }}" class="card-img-top" style="max-width: 250px;">
+   <div class="card-body">
+      <div id="aa{{ product.id }}" class="card-name">{{ Product.name }}</div>
+      <div style="color: orange" class="card-text">{{ Product.price }} $</div>
+      <form action="{% url 'cart_add' Product.id  %}" method="post">
+         {% csrf_token %}
+         {{ form }}
+      <a href="{% url 'product' slug=Product.slug %}"><button class="btn btn-warning">voire</button></a>
+      <button   class="btn mon btn-success" type="submit">Ajouter</button>
+      </form>
+   </div>
+   </div>
+</div>
+{% endfor %}
+</div>
+</div>
+{% endblock %}

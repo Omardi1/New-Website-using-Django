@@ -1,0 +1,80 @@
+
+{% load static %}
+
+{% block content %}
+
+<header>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light" style="text-align: center;">
+    <div class="container">
+      <a class="navbar-brand" href="{% url 'user' %}" style="color: rgb(26, 22, 22);">CasaAgro</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="align-items: center;">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{% url 'index' %}">Accueil</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'product-list' %}">Boutique</a>
+            <link rel="icon" type="image/png" sizes="16*16" href="Pictures/Saved%20Pictures/logo.html">
+          </li>
+        </ul>
+        <div class="d-flex">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+        <body>    
+        {% if  user.is_authenticated %}
+        {{ user.username }}
+        <a href="{% url 'logout' %}">Déconnexion</a>
+        {% else %}    
+        <a href="{% url 'user' %}">S'inscrire</a>
+        {% endif %}
+      </body>
+      {% block js %}{% endblock %}
+              {% with total_items=cart|length %}
+              {% if total_items > 0 %}
+              <a href="{% url 'cart_detail' %}" class="nav-link">
+                {% with total=cart.get_total_price items=total_items %}
+                Panier: {{ items }} produis, {{ total|floatformat }} CFA
+                {% endwith %}
+              </a>
+              {% else %}
+              Votre panier est vide
+              {% endif %}
+              {% endwith %}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+  </div>
+  <div class="carousel-inner" style="right: 100px; left: 100px;" style="right: 100px;" width="85%">
+    <div class="carousel-item active">
+    <img src="{% static 'image/up.webp' %}"   class="d-block w-100" height="400" width="85%"   >
+    </div>
+    <div class="carousel-item" width="85%">
+    <img src="{% static 'image/girl.jpg' %}" class="d-block w-100" height="400" width="85%" >
+    </div>
+    <div class="carousel-item">
+    <img src="{% static 'image/bn.jpg' %}" class="d-block w-100" height="400" width="85%" >
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
+{% endblock %}   
