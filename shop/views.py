@@ -1,11 +1,14 @@
 
-from django.shortcuts import get_object_or_404, redirect, render
-from django.views.generic import DetailView
-from django.views.decorators.http import require_POST
-from django.views.generic.base import View
-from shop.forms import CartAddProductForm
 from django.db.models import Q
-from shop.models import Cart, Product, Category
+from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_POST
+from django.views.generic import DetailView
+from django.views.generic.base import View
+
+from shop.forms import CartAddProductForm
+from shop.models import Cart, Category, Product
+
+from .forms import ProductForm
 
 
 def index(request):
@@ -38,7 +41,7 @@ class ProductList(View):
 class ProductDetail(DetailView):
     model = Product
     context_object_name = 'product'
-    template_name = 'shop/product_details.html'
+    template_name = 'shop/product_detail.html'
     # def get(self, request):
     #     return render(request, self.template_name, {"product": product})
 
@@ -51,16 +54,48 @@ def Product_detail(request, slug):
     product= get_object_or_404(Product, slug=slug)
     return render(request, 'detail.html', context={"product": product})
 
+def new_product(request):
+    if request.method == "POST":  
+        form = ProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect("index")
+    else:
+        form = ProductForm()
+        context = {"form": form}    
+    return render(request, "new_product.html", context )
+
+ 
+def update_product(request, slug):
+    context ={}
+    product = get_object_or_404(Product, slug = slug)
+    form = ProductForm(request.POST, instance = product)
+    if form.is_valid():
+        form.save()
+        return redirect("index")
+    context["form"] = form
+    return render(request, "update_product.html", context )
+
+def delete_product(request, slug):
+    contex ={}
+    product = get_object_or_404(Product, slug = slug)
+    
+    if request.method == "POST":
+        product.delete()
+        return redirect("index")
+    return render(request, "shop/delete_product.html", contex)
+
+
 
 @require_POST
 def cart_add(request, slug):
-    cart = Cart.object
+    cart = Cart(request)
     product = get_object_or_404(Product, slug=slug)
     form = CartAddProductForm(request.POST)
     if form.is_valid():
         cleaned_data = form.cleaned_data
         cart.add(product=product,
-                 quantity=cleaned_data["quantity"], override_qauntity=cleaned_data["override"])
+                 quantity=cleaned_data["quantity"], override_qauntity=cleaned_data["override"]) 
         return redirect("cart_detail")
 
 

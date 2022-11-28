@@ -2,7 +2,7 @@
 
 
 {% block content %}
-<h2>Votre panier</h2>
+<h2><i &#128722;></i panier</h2>
 <div class="row">
 
   {% if cart %}
@@ -30,7 +30,7 @@
           {{ product.name }}
         </td>
         <td>
-          <form action="{% url 'cart_add' product.id %}" method="post">
+          <form action="{% url "cart_add" product.slug %}" method="post">
             {% csrf_token %}
             {{ item.update_quantity_form.quantity }}
             {{ item.update_quantity_form.override }}
@@ -59,7 +59,7 @@
   <a href="{%  url 'order_create' %}" class=" btn btn-primary">Valider votre commande</a>
   {% else %}
   <div class="text-center">
-    <h2>Votre panier est vide</h2>
+    <h2><span &#128722;></span> panier est vide</h2>
     <a href="/" class="btn btn-primary">Continuez vos achats</a>
   </div>
   {% endif %}

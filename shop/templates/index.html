@@ -25,20 +25,23 @@
 {% for Product in products %}
 <div class="col-md-3">
    <div class="card">
-   <h2>{{ Produt.name }}</h2>
+   <h2><a  href="{{ Product.get_absolute_url }}">{{ Produt.name }}</a></h2>
+   {% if Product.image %}
    <img src="{{ Product.image.url }}" alt="{{ Product.name }}" class="card-img-top" style="max-width: 250px;">
+   {% endif %}
    <div class="card-body">
       <div id="aa{{ product.id }}" class="card-name">{{ Product.name }}</div>
       <div style="color: orange" class="card-text">{{ Product.price }} $</div>
-      <form action="{% url 'cart_add' Product.id  %}" method="post">
+      <form action="{% url 'cart_add' Product.slug  %}" method="post">
          {% csrf_token %}
          {{ form }}
-      <a href="{% url 'product' slug=Product.slug %}"><button class="btn btn-warning">voire</button></a>
+      <a href="{% url 'product' Product.slug %}"><button class="btn btn-warning">voire</button></a>
       <button   class="btn mon btn-success" type="submit">Ajouter</button>
       </form>
    </div>
    </div>
 </div>
+{% if forloop.counter|divisibleby:4 %}<div class="clearfix"></div>{% endif %}
 {% endfor %}
 </div>
 </div>
