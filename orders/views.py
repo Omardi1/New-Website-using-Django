@@ -1,4 +1,4 @@
-
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
 from orders.models import OrderItem
@@ -7,7 +7,7 @@ from orders.send_mail.views import send_new_order_email
 from .forms import OrderCreateForm
 from cart.cart import Cart
 
-
+#@login_required
 def order_create(request):
     cart = Cart(request)
     if request.method == "POST":

@@ -1,10 +1,17 @@
 from django.conf import settings
 from django.conf.urls.static import static
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 from .views import cart_add, cart_detail, cart_remove
 from shop.views import Product_detail,  index,  ProductList, ProductDetail, new_product, update_product, delete_product
+from .api import ShopViewSet
+router = DefaultRouter()
+router.register(r'product', ShopViewSet, basename='product')
+
+
 
 urlpatterns = [
+    path("api/", include(router.urls)), 
     path('', index, name='index'),
     path("shop/", ProductList.as_view(), name="product-list"),
     path("new_product/", new_product, name="new_product"),
