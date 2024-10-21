@@ -25,7 +25,7 @@
       <ul class="list-group">
         {% for category in categories %}
         <li class="list-group-item">
-          <a href="#">{{ category.name }}</a>
+          <a href="{% url 'product' category.slug %}">{{ category.name }}</a>
         </li>
         {% endfor %}
       </ul>
