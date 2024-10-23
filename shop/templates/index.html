@@ -1,48 +1,70 @@
-{% extends 'base.html' %}
-{% load static %}
+{% extends 'base.html' %} {% load static %} {% block content %}
 
-{% block content %}
- 
 <div class="row">
-   <div class="col-md-8">
-      <form class="card card-sm">
-         <div class="card-body row no-gutters align-items-center">
-            <div class="col">
-                <input type="search" placeholder="saisissez le nom du produit que vous cherchez" name="item-nam" class="form-control form-contdrol-borderless"> 
-            </div>
-            <div class="col-auto" >
-               <button type="submit" class="btn btn-success">Recherche</button>
-            </div>       
-         </div>
-      </form>
-   </div>
-</div>
-<section>
-   <h1 class="text-center pb-2">Choisir DIAKHELE DIEKHNA c'est choisir la qualité</h1>
- 
- </section>
-<div class="row">
-{% for Product in products %}
-<div class="col-md-3">
-   <div class="card">
-   <h2><a  href="{{ Product.get_absolute_url }}">{{ Produt.name }}</a></h2>
-   {% if Product.image %}
-   <img src="{{ Product.image.url }}" alt="{{ Product.name }}" class="card-img-top" style="max-width: 250px;">
-   {% endif %}
-   <div class="card-body">
-      <div id="aa{{ product.id }}" class="card-name">{{ Product.name }}</div>
-      <div style="color: rgb(2, 5, 96)" class="card-text">{{ Product.price }} $</div>
-      <form action="{% url 'cart_add' Product.slug  %}" method="post">
-         {% csrf_token %}
-         {{ form }}
-      <a href="{% url 'product' Product.slug %}"><button class="btn btn-outline-orange" style="border-color: orange; color: orange">voire</button></a>
-      <button   class="btn mon btn-orange" type="submit" style="background-color: rgb(244, 243, 246); border-color: rgb(33, 0, 124);">Ajouter</button>
-      </form>
-   </div>
-   </div>
-</div>
-{% if forloop.counter|divisibleby:4 %}<div class="clearfix"></div>{% endif %}
-{% endfor %}
-</div>
+  <div class="col-md-8 mx-auto mb-4">
+    <form class="d-flex">
+      <input
+        class="form-control me-2"
+        type="search"
+        placeholder="Que voulez-vous chercher?"
+        aria-label="Search"
+        name="q"
+      />
+      <button class="btn btn-outline-success" type="submit">Rechercher</button>
+    </form>
+  </div>
+  <section>
+    <h1 class="text-center pb-2">
+      Choisir DIAKHELE DIEKHNA c'est choisir la qualité
+    </h1>
+  </section>
+  <div class="row">
+    {% for Product in products %}
+    <div class="col-md-3">
+      <div class="card">
+        <h2><a href="{{ Product.get_absolute_url }}">{{ Produt.name }}</a></h2>
+        {% if Product.image %}
+        <img
+          src="{{ Product.image.url }}"
+          alt="{{ Product.name }}"
+          class="card-img-top"
+          style="max-width: 250px"
+        />
+        {% endif %}
+        <div class="card-body">
+          <div id="aa{{ product.id }}" class="card-name">
+            {{ Product.name }}
+          </div>
+          <div style="color: rgb(2, 5, 96)" class="card-text">
+            {{ Product.price }} $
+          </div>
+          <form action="{% url 'cart_add' Product.slug  %}" method="post">
+            {% csrf_token %} {{ form }}
+            <a href="{% url 'product' Product.slug %}">
+              <button
+                class="btn btn-outline-orange"
+                style="border-color: orange; color: orange"
+              >
+                voire
+              </button>
+            </a>
+            <button
+              class="btn mon btn-orange"
+              type="submit"
+              style="
+                background-color: rgb(244, 243, 246);
+                border-color: rgb(33, 0, 124);
+              "
+            >
+              Ajouter
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% if forloop.counter|divisibleby:4 %}
+    <div class="clearfix"></div>
+    {% endif %} {% endfor %}
+  </div>
 </div>
 {% endblock %}

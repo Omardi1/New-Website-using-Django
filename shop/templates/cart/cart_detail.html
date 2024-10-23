@@ -1,68 +1,96 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block content %}
+<div class="container mt-4">
+  <h2 class="text-center mb-4">
+    <i class="fas fa-shopping-cart"></i> Votre Panier
+  </h2>
+  <div class="row">
+    {% if cart %}
+    <!-- Tableau des produits dans le panier -->
+    <table class="table table-bordered table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th>Image</th>
+          <th>Produit</th>
+          <th>Quantité</th>
+          <th>Supprimer</th>
+          <th>Prix Unitaire</th>
+          <th>Prix Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in cart %} {% with product=item.product %}
+        <tr>
+          <!-- Image du produit -->
+          <td>
+            <img
+              src="{{ product.image.url }}"
+              alt="{{ product.name }}"
+              class="img-thumbnail"
+              width="150"
+              height="100"
+            />
+          </td>
+          <!-- Nom du produit -->
+          <td>
+            <strong>{{ product.name }}</strong>
+          </td>
+          <!-- Quantité avec mise à jour -->
+          <td>
+            <form
+              action="{% url 'cart_add' product.slug %}"
+              method="post"
+              class="d-flex align-items-center"
+            >
+              {% csrf_token %}
+              <input
+                type="number"
+                name="quantity"
+                value="{{ item.quantity }}"
+                class="form-control w-50 me-2"
+                min="1"
+              />
+              <input type="hidden" name="override" value="True" />
+              <button type="submit" class="btn btn-outline-primary btn-sm">
+                Mettre à jour
+              </button>
+            </form>
+          </td>
+          <!-- Bouton supprimer -->
+          <td>
+            <form action="{% url 'cart_remove' product.id %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger btn-sm">
+                Retirer
+              </button>
+            </form>
+          </td>
+          <!-- Prix unitaire -->
+          <td>{{ item.price }} FCFA</td>
+          <!-- Prix total -->
+          <td>
+            <strong>{{ item.total_price }} FCFA</strong>
+          </td>
+        </tr>
+        {% endwith %} {% endfor %}
+      </tbody>
+    </table>
 
+    <!-- Bouton pour valider la commande -->
+    <div class="text-end mt-3">
+      <a href="{% url 'order_create' %}" class="btn btn-success btn-lg"
+        >Valider</a
+      >
+    </div>
 
-{% block content %}
-<h2><i &#128722;></i panier</h2>
-<div class="row">
-
-  {% if cart %}
-
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Image</th>
-        <th>Produit</th>
-        <th>Quantité</th>
-        <th>Retiré</th>
-        <th>Prix Unitaire</th>
-        <th>Prix Total</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for item in cart %}
-
-      {% with product=item.product %}
-      <tr>
-        <td>
-          <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-thumbnail" width="200" height="100">
-        </td>
-        <td>
-          {{ product.name }}
-        </td>
-        <td>
-          <form action="{% url "cart_add" product.slug %}" method="post">
-            {% csrf_token %}
-            {{ item.update_quantity_form.quantity }}
-            {{ item.update_quantity_form.override }}
-            <input type="submit" value="Mettre a jour">
-          </form>
-        </td>
-        <td>
-          <form action="{% url 'cart_remove' product.id %}" method="post">
-            {% csrf_token %}
-            <input type="submit" value="Supprimer du panier">
-          </form>
-        </td>
-        <td>
-          {{ item.price }}
-        </td>
-        <td>
-          {{ item.total_price }}
-        </td>
-      </tr>
-      {% endwith %}
-      {% endfor %}
-
-    </tbody>
-  </table>
-
-  <a href="{%  url 'order_create' %}" class=" btn btn-primary">Valider votre commande</a>
-  {% else %}
-  <div class="text-center">
-    <h2><span &#128722;></span> panier est vide</h2>
-    <a href="/" class="btn btn-primary">Continuez vos achats</a>
+    {% else %}
+    <!-- Message si le panier est vide -->
+    <div class="text-center">
+      <h2 class="mb-4">
+        <i class="fas fa-shopping-cart"></i> Votre panier est vide
+      </h2>
+      <a href="/" class="btn btn-primary btn-lg">Continuez vos achats</a>
+    </div>
+    {% endif %}
   </div>
-  {% endif %}
-
 </div>
 {% endblock content %}
